@@ -7,12 +7,27 @@ export function SiteHeader() {
   const location = useLocation()
 
   const getPageTitle = () => {
-    const routeTitles: Record<string, string> = {
+    const pathname = location.pathname
+
+    const exactMatches: Record<string, string> = {
       '/': 'Home',
       '/tasks': 'Tasks',
+      '/tasks/new': 'Nova Tarefa',
     }
 
-    return routeTitles[location.pathname] || 'Home'
+    if (exactMatches[pathname]) {
+      return exactMatches[pathname]
+    }
+
+    if (pathname.startsWith('/tasks/edit/')) {
+      return 'Editar Tarefa'
+    }
+
+    if (pathname.startsWith('/tasks/')) {
+      return 'Detalhes da Tarefa'
+    }
+
+    return 'Dashboard'
   }
 
   return (
@@ -27,7 +42,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <a
-              href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
+              href="https://github.com/alyssonbarrera/ai-task-manager"
               rel="noopener noreferrer"
               target="_blank"
               className="dark:text-foreground"
