@@ -14,7 +14,7 @@ export function TaskContent() {
     <section className="flex flex-col h-full">
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
-          <div className="p-4 space-y-6">
+          <div className="px-4 pb-4 space-y-6">
             {/* Estimated Time Card */}
             <Card>
               <CardHeader className="flex flex-row items-center gap-2">
@@ -89,7 +89,7 @@ export function TaskContent() {
         </ScrollArea>
       </div>
 
-      <div className="p-4 border-t flex-shrink-0">
+      <div className="px-4 pt-4 border-t flex-shrink-0">
         <div className="flex justify-end">
           <Button type="button" className="cursor-pointer">
             Salvar Task
