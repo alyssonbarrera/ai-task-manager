@@ -149,9 +149,10 @@ export function ChatInterface() {
             className="flex-1"
           />
           <Button
+            size="icon"
+            className="cursor-pointer"
             onClick={handleSendMessage}
             disabled={!input.trim() || isLoading}
-            size="icon"
           >
             <Send className="h-4 w-4" />
           </Button>
