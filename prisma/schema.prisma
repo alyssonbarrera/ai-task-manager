@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client"
+  previewFeatures = ["driverAdapters"]
+  output          = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  age       Int?
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Task {
+  id                       String   @id @default(cuid())
+  title                    String
+  description              String
+  steps                    String? // Will store as JSON string
+  estimatedTime            String   @map("estimated_time")
+  implementationSuggestion String?  @map("implementation_suggestion")
+  acceptanceCriteria       String?  @map("acceptance_criteria") // Will store as JSON string
+  suggestedTests           String?  @map("suggested_tests") // Will store as JSON string
+  content                  String? // Combined markdown version
+  chatHistory              String?  @map("chat_history") // Will store as JSON string
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}

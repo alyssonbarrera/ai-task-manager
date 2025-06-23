@@ -12,6 +12,7 @@ export function SiteHeader() {
     const exactMatches: Record<string, string> = {
       '/': 'Home',
       '/tasks': 'Tasks',
+      '/users': 'Users',
       '/tasks/new': 'Nova Tarefa',
     }
 

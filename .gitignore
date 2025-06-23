@@ -6,3 +6,5 @@
 /build/
 
 .github/
+.env
+/app/generated/prisma

@@ -1,16 +1,78 @@
-import { ChartAreaInteractive } from '~/components/chart-area-interactive'
-import { DataTable } from '~/components/data-table'
 import { SectionCards } from '~/components/section-cards'
-import data from '../dashboard/data.json'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '~/components/ui/card'
+import { TasksList } from '~/features/tasks/tasks-list'
+import { UsersList } from '~/features/users/users-list'
+import { countTasks, countUsers, fetchTasks, fetchUsers } from '~/queries'
+import type { Route } from './+types/dashboard'
 
-export default function Dashboard() {
-  return (
-    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-      <SectionCards />
-      <div className="px-4 lg:px-6">
-        <ChartAreaInteractive />
+export async function loader() {
+  const sixMonthsAgo = new Date()
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
+
+  const [usersCount, tasksCount, users, tasks] = await Promise.all([
+    countUsers(sixMonthsAgo),
+    countTasks(sixMonthsAgo),
+    fetchUsers(),
+    fetchTasks(),
+  ])
+
+  return {
+    users,
+    tasks,
+    usersCount,
+    tasksCount,
+  }
+}
+
+export default function Dashboard({ loaderData }: Route.ComponentProps) {
+  if (!loaderData) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div>Carregando...</div>
       </div>
-      <DataTable data={data} />
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-4 md:gap-6">
+      <SectionCards
+        usersCount={loaderData.usersCount}
+        tasksCount={loaderData.tasksCount}
+      />
+
+      <div className="flex flex-col gap-4 md:gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Usuários</CardTitle>
+            <CardDescription>
+              Lista de todos os usuários do sistema
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <UsersList />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Tarefas</CardTitle>
+            <CardDescription>Lista de todas as tarefas criadas</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <TasksList />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

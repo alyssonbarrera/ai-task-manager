@@ -2,6 +2,7 @@ import {
   IconDashboard,
   IconInnerShadowTop,
   IconListCheck,
+  IconUsers,
 } from '@tabler/icons-react'
 import type * as React from 'react'
 import { NavLink } from 'react-router'
@@ -27,6 +28,11 @@ const data = {
       title: 'Dashboard',
       url: '/',
       icon: IconDashboard,
+    },
+    {
+      title: 'Users',
+      url: '/users',
+      icon: IconUsers,
     },
     {
       title: 'Tasks',
