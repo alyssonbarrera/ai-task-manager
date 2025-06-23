@@ -30,7 +30,7 @@ async function main() {
           faker.lorem.sentence(),
           faker.lorem.sentence(),
         ]),
-        estimatedTime: `${faker.number.int({ min: 1, max: 8 })}h`,
+        estimatedTime: `${faker.number.int({ min: 1, max: 8 })}d`,
         implementationSuggestion: faker.lorem.paragraphs(2),
         acceptanceCriteria: JSON.stringify([
           faker.lorem.sentence(),
