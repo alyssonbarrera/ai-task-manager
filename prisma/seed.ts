@@ -19,8 +19,24 @@ async function main() {
     users.push(user)
   }
 
-  // Finally, create 20 tasks
   for (let i = 0; i < 20; i++) {
+    // Second, create a chat for each task
+    const chat = await prisma.chat.create({
+      data: {
+        title: faker.lorem.sentence({ min: 3, max: 6 }),
+      },
+    })
+
+    // Third, associate the chat messages with the chat
+    await prisma.chatMessage.create({
+      data: {
+        chatId: chat.id,
+        role: i % 2 === 0 ? 'user' : 'assistant',
+        content: faker.lorem.paragraph({ min: 2, max: 4 }),
+      },
+    })
+
+    // Finally, create 20 tasks
     await prisma.task.create({
       data: {
         title: faker.lorem.sentence({ min: 3, max: 6 }),
@@ -46,12 +62,15 @@ async function main() {
           { role: 'assistant', content: faker.lorem.paragraph() },
           { role: 'user', content: faker.lorem.sentence() },
         ]),
+        chatId: chat.id,
       },
     })
   }
 
   console.log('Seed completed! Created:')
   console.log('- 20 users')
+  console.log('- 20 chats')
+  console.log('- 20 chat messages')
   console.log('- 20 tasks')
 }
 

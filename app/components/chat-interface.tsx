@@ -1,113 +1,119 @@
 import { Send } from 'lucide-react'
-import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
+import { useFetcher, useLoaderData } from 'react-router'
+import { MarkdownMessage } from '~/components/markdown-message'
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
 import { Card } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { ScrollArea } from '~/components/ui/scroll-area'
+import type { ChatMessage } from '~/generated/prisma/client'
 
-type Message = {
-  id: string
-  content: string
-  role: 'user' | 'assistant'
-  timestamp: Date
-}
+import { cn } from '~/lib/utils'
+import type { loader } from '~/routes/task-new'
 
 export function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: 'Olá! Descreva a tarefa!',
-      role: 'assistant',
-      timestamp: new Date(),
-    },
-  ])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const fetcher = useFetcher()
+  const isLoading = fetcher.state !== 'idle'
+
+  const { chatId, messages } = useLoaderData<typeof loader>()
+
+  const [localMessages, setLocalMessages] =
+    useState<({ pending?: boolean } & ChatMessage)[]>(messages)
+  const [inputValue, setInputValue] = useState('')
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const value = inputValue.trim()
+    if (!value) return
+
+    const optimisticMessage: ChatMessage & { pending: boolean } = {
+      pending: true,
+      content: value,
+      chatId: chatId ?? '',
+      updatedAt: new Date(),
+      createdAt: new Date(),
+      role: 'user',
+      id: `optimistic-${Date.now()}`,
+    }
+
+    setLocalMessages(prev => [...prev, optimisticMessage])
+    setInputValue('')
+
+    inputRef.current?.focus()
+
+    fetcher.submit(
+      { chatId: chatId ?? '', message: value },
+      { method: 'POST', action: '/api/chat' }
+    )
+  }
+
   useEffect(() => {
     scrollToBottom()
+  }, [localMessages])
+
+  useEffect(() => {
+    setLocalMessages(messages)
   }, [messages])
-
-  const handleSendMessage = async () => {
-    if (!input.trim()) return
-
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: input,
-      role: 'user',
-      timestamp: new Date(),
-    }
-
-    setMessages(prev => [...prev, userMessage])
-    setInput('')
-    setIsLoading(true)
-
-    // Simulate bot response after a delay
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `Thanks for your message! This is a simulated response to: "${input}"`,
-        role: 'assistant',
-        timestamp: new Date(),
-      }
-      setMessages(prev => [...prev, botMessage])
-      setIsLoading(false)
-    }, 1000)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
 
   return (
     <Card className="flex flex-col h-full w-full border shadow-sm overflow-hidden">
       <div className="flex-1 min-h-0">
         <ScrollArea className="h-full">
           <div className="p-4 space-y-4">
-            {messages.map(message => (
+            {localMessages.map(message => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={cn(
+                  'flex',
+                  message.role === 'user' ? 'justify-end' : 'justify-start',
+                  message.pending && 'opacity-50'
+                )}
               >
                 <div
-                  className={`flex gap-3 max-w-[80%] ${
+                  className={cn(
+                    'flex gap-3 max-w-[80%]',
                     message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-                  }`}
+                  )}
                 >
                   <Avatar className="h-8 w-8 flex-shrink-0">
                     <div
-                      className={`flex h-full w-full items-center justify-center rounded-full ${
+                      className={cn(
+                        'flex h-full w-full items-center justify-center rounded-full',
                         message.role === 'user'
                           ? 'bg-primary text-primary-foreground'
                           : 'bg-muted text-muted-foreground'
-                      }`}
+                      )}
                     >
                       {message.role === 'user' ? 'U' : 'A'}
                     </div>
                   </Avatar>
                   <div
-                    className={`rounded-lg p-3 ${
+                    className={cn(
+                      'rounded-lg p-3',
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-muted'
-                    }`}
+                    )}
                   >
-                    <p className="text-sm break-words">{message.content}</p>
+                    {message.role === 'assistant' ? (
+                      <MarkdownMessage
+                        content={message.content}
+                        className="text-sm break-words"
+                      />
+                    ) : (
+                      <p className="text-sm break-words">{message.content}</p>
+                    )}
                     <p className="text-xs opacity-70 mt-1">
-                      {message.timestamp.toLocaleTimeString([], {
+                      {new Date(message.createdAt).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
                       })}
@@ -140,23 +146,27 @@ export function ChatInterface() {
       </div>
 
       <div className="p-4 border-t flex-shrink-0">
-        <div className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex gap-2">
           <Input
-            placeholder="Type a message..."
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+            name="message"
+            placeholder="Descreva a tarefa..."
             className="flex-1"
+            ref={inputRef}
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
+            autoComplete="off"
           />
+          <input type="hidden" name="chatId" value={chatId ?? ''} />
+
           <Button
             size="icon"
+            type="submit"
+            disabled={isLoading}
             className="cursor-pointer"
-            onClick={handleSendMessage}
-            disabled={!input.trim() || isLoading}
           >
-            <Send className="h-4 w-4" />
+            <Send className="size-4" />
           </Button>
-        </div>
+        </form>
       </div>
     </Card>
   )
