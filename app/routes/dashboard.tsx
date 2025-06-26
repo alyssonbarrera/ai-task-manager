@@ -6,25 +6,34 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import { ChatsList } from '~/features/chats/chats-list'
 import { TasksList } from '~/features/tasks/tasks-list'
 import { UsersList } from '~/features/users/users-list'
-import { countTasks, countUsers, fetchTasks, fetchUsers } from '~/queries'
+import {
+  countTasks,
+  countUsers,
+  fetchChats,
+  fetchTasks,
+  fetchUsers,
+} from '~/queries'
 import type { Route } from './+types/dashboard'
 
 export async function loader() {
   const sixMonthsAgo = new Date()
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
 
-  const [usersCount, tasksCount, users, tasks] = await Promise.all([
+  const [usersCount, tasksCount, users, tasks, chats] = await Promise.all([
     countUsers(sixMonthsAgo),
     countTasks(sixMonthsAgo),
     fetchUsers(),
     fetchTasks(),
+    fetchChats(),
   ])
 
   return {
     users,
     tasks,
+    chats,
     usersCount,
     tasksCount,
   }
@@ -69,6 +78,18 @@ export default function Dashboard({ loaderData }: Route.ComponentProps) {
           <CardContent>
             <div className="rounded-md border">
               <TasksList />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Chats</CardTitle>
+            <CardDescription>Lista de todos os chats</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border">
+              <ChatsList />
             </div>
           </CardContent>
         </Card>

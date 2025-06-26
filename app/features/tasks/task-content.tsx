@@ -6,14 +6,15 @@ import {
   Timer,
 } from 'lucide-react'
 import { Fragment } from 'react'
-import { useLoaderData } from 'react-router'
+import { useFetcher, useLoaderData } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { ScrollArea } from '~/components/ui/scroll-area'
 import type { loader } from '~/routes/task-new'
 
 export function TaskContent() {
-  const { task } = useLoaderData<typeof loader>()
+  const { Form, ...fetcher } = useFetcher()
+  const { task, taskId, messageId } = useLoaderData<typeof loader>()
 
   if (!task?.title) {
     return <Fragment />
@@ -103,9 +104,17 @@ export function TaskContent() {
 
       <div className="px-4 pt-4 border-t flex-shrink-0">
         <div className="flex justify-end">
-          <Button type="button" className="cursor-pointer">
-            Salvar Task
-          </Button>
+          <Form method="POST" className="flex justify-end">
+            <input type="hidden" name="task_id" value={taskId} />
+            <input type="hidden" name="message_id" value={messageId} />
+            <Button
+              type="submit"
+              className="cursor-pointer"
+              disabled={fetcher.state !== 'idle'}
+            >
+              Salvar Task
+            </Button>
+          </Form>
         </div>
       </div>
     </section>

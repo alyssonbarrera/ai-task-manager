@@ -1,6 +1,7 @@
 export { countTasks } from './count-tasks'
 export { countUsers } from './count-users'
 export { createChat } from './create-chat'
+export { fetchChats } from './fetch-chats'
 export { fetchTasks } from './fetch-tasks'
 export { fetchUsers } from './fetch-users'
 export { updateChat } from './update-chat'

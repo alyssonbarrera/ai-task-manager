@@ -39,9 +39,9 @@ model Task {
   createdAt                DateTime @default(now()) @map("created_at")
   updatedAt                DateTime @updatedAt @map("updated_at")
 
-  // Relação 1:1 obrigatória com Chat
-  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  chatId String @unique @map("chat_id")
+  // Relação 1:1 obrigatória com Chat Message
+  chatMessage   ChatMessage? @relation(fields: [chatMessageId], references: [id])
+  chatMessageId String?      @unique @map("chat_message_id")
 
   @@map("tasks")
 }
@@ -52,7 +52,6 @@ model Chat {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  task     Task?
   messages ChatMessage[]
 
   @@map("chats")
@@ -73,6 +72,8 @@ model ChatMessage {
 
   chatId String @map("chat_id")
   chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  task Task?
 
   @@map("chat_messages")
 }

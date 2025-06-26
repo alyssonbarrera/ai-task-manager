@@ -2,6 +2,7 @@ import {
   IconDashboard,
   IconInnerShadowTop,
   IconListCheck,
+  IconMessageCircle,
   IconUsers,
 } from '@tabler/icons-react'
 import type * as React from 'react'
@@ -38,6 +39,11 @@ const data = {
       title: 'Tasks',
       url: '/tasks',
       icon: IconListCheck,
+    },
+    {
+      title: 'Chats',
+      url: '/chats',
+      icon: IconMessageCircle,
     },
   ],
 }
