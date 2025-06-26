@@ -5,9 +5,7 @@ import {
   ChatMessageRole,
   type Prisma,
 } from '~/generated/prisma/client'
-import { createChat } from '~/queries/create-chat'
-import { createChatMessage } from '~/queries/create-chat-message'
-import { fetchChatMessages } from '~/queries/fetch-chat-messages'
+import { createChat, createChatMessage, fetchChatMessages } from '~/queries'
 import { getChatCompletions } from '~/services/chat.server'
 import type { Route } from './+types/api.chat'
 

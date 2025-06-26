@@ -2,10 +2,12 @@ import { redirect } from 'react-router'
 import { TasksChatBot } from '~/features/tasks/tasks-chatbot'
 import type { Task } from '~/features/tasks/types'
 import type { ChatMessage } from '~/generated/prisma/client'
-import { createTask } from '~/queries/create-task'
-import { getChatById } from '~/queries/get-chat-by-id'
-import { getChatMessageById } from '~/queries/get-chat-message-by-id'
-import { updateTask } from '~/queries/update-task'
+import {
+  createTask,
+  getChatById,
+  getChatMessageById,
+  updateTask,
+} from '~/queries'
 import type { Route } from './+types/task-new'
 
 const EMPTY_MESSAGES: ChatMessage[] = []

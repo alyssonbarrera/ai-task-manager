@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
-import type { loader } from '~/routes/users'
+import type { loader } from '~/routes/dashboard'
 
 export function UsersList() {
   const { users } = useLoaderData<typeof loader>()

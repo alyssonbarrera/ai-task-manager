@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '~/components/ui/table'
-import type { loader } from '~/routes/chats'
+import type { loader } from '~/routes/dashboard'
 
 type Chat = {
   id: string
