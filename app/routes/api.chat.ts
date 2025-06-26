@@ -8,7 +8,7 @@ import {
 import { createChat } from '~/queries/create-chat'
 import { createChatMessage } from '~/queries/create-chat-message'
 import { fetchChatMessages } from '~/queries/fetch-chat-messages'
-import { getChatCompletions } from '~/services/openai.server'
+import { getChatCompletions } from '~/services/chat.server'
 import type { Route } from './+types/api.chat'
 
 const DEFAULT_ERROR_MESSAGE = 'Desculpe, não consegui entender a sua pergunta.'

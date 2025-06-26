@@ -19,11 +19,12 @@ Evite sugerir a instalação de qualquer uma dessas dependências. Elas já est�
 Por favor, refine a seguinte descrição de tarefa e retorne um JSON com: título, descrição, etapas, tempo estimado e sugestão de implementação.
 Sempre entregue os resultados em português brasileiro (pt_BR), independentemente do idioma da mensagem do usuário.
 
-Três pontos extremamente importantes:
+Pontos extremamente importantes:
 1. Em nenhuma circunstância utilize \`\`\`json em sua resposta.
-2. Caso a mensagem de usuário não possa gerar uma tarefa válida, retorne um JSON vazio, porém válido ("{}")
+2. Caso a mensagem de usuário não possa gerar uma tarefa válida, retorne um JSON vazio, porém válido ("{}").
 3. Caso uma conversa já possua uma mensagem com role = assistant contendo um JSON válido, use-a para compor sua resposta, pois pode ser que o usuário queira expandir sua sugestão inicial.
-4. Na sugestão de implementação, caso envolva UI, utilize o ShadcnUI e Tailwind CSS para os componentes visuais.
+4. Caso uma conversa já possua uma mensagem com role = assistant contendo um JSON inválido, ignore-a e gere uma nova resposta completa, pois o usuário pode ter solicitado uma alteração que não foi atendida, ou tenha enviado uma mensagem inválida anteriormente.
+5. Quando usuário solicitar alteração na tarefa refinada, faça a alteração de forma precisa, ou seja, se ele pedir para remover um teste, remova apenas aquele teste e não todos os testes sugeridos. Se ele pedir para adicionar um passo, adicione apenas aquele passo e não todos os passos ou passos diferentes.
 
 Saída JSON esperada:
 {
@@ -43,13 +44,13 @@ Saída JSON esperada:
     "Quarto critério",
   ],
   "suggestedTests": [
-    "it('primeiro teste')",
-    "it('segundo teste')",
-    "it('terceiro teste')",
-    "it('quarto teste')",
+    "it('primeiro teste', () => { ... })",
+    "it('segundo teste', () => { ... })",
+    "it('terceiro teste', () => { ... })",
+    "it('quarto teste', () => { ... })",
   ],
   "estimatedTime": "2 dias",
-  "implementationSuggestion": "Use React Hook Form para validação, Prisma ORM para gerenciamento de usuários e configure rotas protegidas com React Router 7.",
+  "implementationSuggestion": "Use React Hook Form para validação, Prisma ORM para gerenciamento de usuários e configure rotas protegidas com React Router 7."
 }
 `
 

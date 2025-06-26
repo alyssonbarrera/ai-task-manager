@@ -35,14 +35,17 @@ export function ChatInterface() {
     const value = inputValue.trim()
     if (!value) return
 
+    const date = new Date()
+    const now = Date.now()
+
     const optimisticMessage: ChatMessage & { pending: boolean } = {
+      role: 'user',
       pending: true,
       content: value,
+      updatedAt: date,
+      createdAt: date,
       chatId: chatId ?? '',
-      updatedAt: new Date(),
-      createdAt: new Date(),
-      role: 'user',
-      id: `optimistic-${Date.now()}`,
+      id: `optimistic-${now}`,
     }
 
     setLocalMessages(prev => [...prev, optimisticMessage])
@@ -156,7 +159,6 @@ export function ChatInterface() {
             onChange={e => setInputValue(e.target.value)}
             autoComplete="off"
           />
-          <input type="hidden" name="chatId" value={chatId ?? ''} />
 
           <Button
             size="icon"
