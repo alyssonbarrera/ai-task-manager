@@ -1,5 +1,5 @@
-import { Pencil, Trash2 } from 'lucide-react'
-import { useLoaderData } from 'react-router'
+import { MessageCircle, Pencil, Trash2 } from 'lucide-react'
+import { Link, useLoaderData } from 'react-router'
 
 import { Button } from '~/components/ui/button'
 import {
@@ -40,20 +40,26 @@ export function TasksList() {
             <TableCell>
               <div className="flex items-center gap-2">
                 <Button
-                  variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
-                  title="Edit task"
+                  title="Chat"
+                  variant="ghost"
+                  className="size-8"
+                  disabled={!task.chatMessageId}
                 >
-                  <Pencil className="h-4 w-4" />
+                  <Link to={`/task/new?chat=${task.chatMessage?.chatId}`}>
+                    <MessageCircle className="size-4" />
+                  </Link>
                 </Button>
+                <Link to={`/tasks/edit/${task.id}`}>
+                  <Pencil className="size-4" />
+                </Link>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-destructive hover:text-destructive"
                   title="Delete task"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
             </TableCell>
