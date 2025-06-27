@@ -1,6 +1,7 @@
 import { redirect } from 'react-router'
 import { TaskView } from '~/features/tasks/task-view'
 import { getTaskById } from '~/queries'
+import { findSimilarTasks } from '~/services/task.server'
 import type { Route } from './+types/task-view'
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -10,7 +11,9 @@ export async function loader({ params }: Route.LoaderArgs) {
     return redirect('/tasks')
   }
 
-  return { task }
+  const similarTasks = await findSimilarTasks(task.title)
+
+  return { task, similarTasks }
 }
 
 export function HydrateFallback() {

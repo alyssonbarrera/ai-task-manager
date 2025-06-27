@@ -1,12 +1,14 @@
 import {
+  ArrowRight,
   Bug,
   Calendar,
   CheckCircle,
   Clock,
   FileText,
+  Link as LinkIcon,
   Target,
 } from 'lucide-react'
-import { useLoaderData } from 'react-router'
+import { Link, useLoaderData } from 'react-router'
 import { Badge } from '~/components/ui/badge'
 import {
   Card,
@@ -15,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from '~/components/ui/card'
+import { cn } from '~/lib/utils'
 import type { loader } from '~/routes/task-view'
 
 const parseJsonArray = (jsonString: string | null) => {
@@ -27,7 +30,7 @@ const parseJsonArray = (jsonString: string | null) => {
 }
 
 export function TaskView() {
-  const { task } = useLoaderData<typeof loader>()
+  const { task, similarTasks } = useLoaderData<typeof loader>()
 
   const steps = parseJsonArray(task.steps)
   const acceptanceCriteria = parseJsonArray(task.acceptanceCriteria)
@@ -44,7 +47,12 @@ export function TaskView() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-4xl">
+    <div
+      className={cn('container grid', {
+        'grid-cols-2': similarTasks.length > 0,
+        'grid-cols-1 max-w-3xl mx-auto': similarTasks.length === 0,
+      })}
+    >
       <div className="space-y-6">
         {/* Header */}
         <div className="space-y-2">
@@ -173,6 +181,54 @@ export function TaskView() {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Similar Tasks Section */}
+      <div className="space-y-6 pl-8">
+        {similarTasks.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <LinkIcon className="h-5 w-5" />
+                Tarefas Similares
+              </CardTitle>
+              <CardDescription>
+                Tarefas relacionadas que podem servir como referência
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {similarTasks.map(similarTask => (
+                <Link
+                  key={similarTask.id}
+                  to={`/tasks/${similarTask.id}`}
+                  className="block border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2 flex-1">
+                      <h3 className="font-medium text-sm leading-tight">
+                        {similarTask.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {similarTask.description}
+                      </p>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {similarTask.estimated_time}
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {Math.round(similarTask.similarity_score * 100)}%
+                          similar
+                        </Badge>
+                      </div>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1" />
+                  </div>
+                </Link>
+              ))}
             </CardContent>
           </Card>
         )}

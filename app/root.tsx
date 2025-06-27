@@ -1,3 +1,11 @@
+import '@copilotkit/react-ui/styles.css'
+import './app.css'
+
+import { CopilotKit } from '@copilotkit/react-core'
+import {
+  type CopilotKitCSSProperties,
+  CopilotSidebar,
+} from '@copilotkit/react-ui'
 import {
   isRouteErrorResponse,
   Links,
@@ -6,9 +14,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router'
-
 import type { Route } from './+types/root'
-import './app.css'
 import { Toaster } from './components/ui/sonner'
 
 export const links: Route.LinksFunction = () => [
@@ -44,11 +50,35 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-        <Toaster />
+      <body
+        style={
+          {
+            '--copilot-kit-primary-color': 'oklch(0.985 0 0)',
+            '--copilot-kit-background-color': 'oklch(0.21 0.006 285.885)',
+            '--copilot-kit-text-color': 'oklch(0.985 0 0)',
+            '--copilot-kit-secondary-color': 'oklch(0.21 0.006 285.885)',
+            '--copilot-kit-secondary-text-color': 'oklch(0.985 0 0)',
+            '--copilot-kit-secondary-contrast-color': 'oklch(0.985 0 0)',
+            '--copilot-kit-input-background-color': 'oklch(0.21 0.006 285.885)',
+            '--copilot-kit-contrast-color': 'oklch(0.21 0.006 285.885)',
+            '--copilot-kit-dev-console-bg': 'oklch(0.21 0.006 285.885)',
+            '--copilot-kit-dev-console-text-': 'oklch(0.985 0 0)',
+          } as CopilotKitCSSProperties
+        }
+      >
+        <CopilotKit runtimeUrl="/copilotkit">
+          <CopilotSidebar
+            labels={{
+              title: 'Assitente de Tarefas',
+              initial: 'Faça uma pergunta sobre as tarefas',
+            }}
+          >
+            {children}
+            <ScrollRestoration />
+            <Scripts />
+            <Toaster position="top-right" />
+          </CopilotSidebar>
+        </CopilotKit>
       </body>
     </html>
   )

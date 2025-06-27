@@ -1,6 +1,6 @@
 import { Send } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { useFetcher, useLoaderData } from 'react-router'
+import { useFetcher, useLoaderData, useSearchParams } from 'react-router'
 import { MarkdownMessage } from '~/components/markdown-message'
 import { Avatar } from '~/components/ui/avatar'
 import { Button } from '~/components/ui/button'
@@ -19,7 +19,10 @@ export function ChatInterface() {
   const fetcher = useFetcher()
   const isLoading = fetcher.state !== 'idle'
 
-  const { chatId, messages } = useLoaderData<typeof loader>()
+  const [params] = useSearchParams()
+  const chatId = params.get('chatId')
+
+  const { messages } = useLoaderData<typeof loader>()
 
   const [localMessages, setLocalMessages] =
     useState<({ pending?: boolean } & ChatMessage)[]>(messages)
