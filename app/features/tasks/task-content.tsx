@@ -6,7 +6,7 @@ import {
   Timer,
 } from 'lucide-react'
 import { Fragment } from 'react'
-import { useFetcher, useLoaderData } from 'react-router'
+import { Link, useFetcher, useLoaderData } from 'react-router'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { ScrollArea } from '~/components/ui/scroll-area'
@@ -104,9 +104,10 @@ export function TaskContent() {
 
       <div className="px-4 pt-4 border-t flex-shrink-0">
         <div className="flex justify-end">
-          <Form method="POST" className="flex justify-end">
+          <Form method="POST" className="flex flex-1 justify-between">
             <input type="hidden" name="task_id" value={taskId} />
             <input type="hidden" name="message_id" value={messageId} />
+
             <Button
               type="submit"
               className="cursor-pointer"
@@ -114,6 +115,12 @@ export function TaskContent() {
             >
               Salvar Task
             </Button>
+
+            {taskId && (
+              <Button type="button">
+                <Link to={`/tasks/${taskId}`}>Detalhes da Tarefa</Link>
+              </Button>
+            )}
           </Form>
         </div>
       </div>

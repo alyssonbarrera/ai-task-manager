@@ -12,7 +12,7 @@ export function SiteHeader() {
     const exactMatches: Record<string, string> = {
       '/': 'Home',
       '/tasks': 'Tasks',
-      '/users': 'Users',
+      '/chats': 'Chats',
       '/tasks/new': 'Nova Tarefa',
     }
 

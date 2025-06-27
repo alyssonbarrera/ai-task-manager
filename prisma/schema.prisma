@@ -34,13 +34,11 @@ model Task {
   implementationSuggestion String?  @map("implementation_suggestion")
   acceptanceCriteria       String?  @map("acceptance_criteria") // Will store as JSON string
   suggestedTests           String?  @map("suggested_tests") // Will store as JSON string
-  content                  String? // Combined markdown version
-  chatHistory              String?  @map("chat_history") // Will store as JSON string
   createdAt                DateTime @default(now()) @map("created_at")
   updatedAt                DateTime @updatedAt @map("updated_at")
 
   // Relação 1:1 obrigatória com Chat Message
-  chatMessage   ChatMessage? @relation(fields: [chatMessageId], references: [id])
+  chatMessage   ChatMessage? @relation(fields: [chatMessageId], references: [id], onDelete: Cascade)
   chatMessageId String?      @unique @map("chat_message_id")
 
   @@map("tasks")
