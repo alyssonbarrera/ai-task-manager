@@ -143,7 +143,7 @@ export function ChatsList() {
             <TableRow key={chat.id}>
               <TableCell className="font-mono text-sm text-muted-foreground">
                 <Link
-                  to={`/tasks/new/chatId=${chat.id}`}
+                  to={`/tasks/new?chatId=${chat.id}`}
                   className="decoration-dotted underline underline-offset-4"
                 >
                   {chat.id}

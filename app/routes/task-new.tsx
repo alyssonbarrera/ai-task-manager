@@ -8,6 +8,7 @@ import {
   getChatMessageById,
   updateTask,
 } from '~/queries'
+import { storeTaskAsEmbeddings } from '~/services/task.server'
 import type { Route } from './+types/task-new'
 
 const EMPTY_MESSAGES: ChatMessage[] = []
@@ -47,10 +48,14 @@ export async function action({ request }: Route.ActionArgs) {
       id: taskId,
       data: taskData,
     })
+
+    await storeTaskAsEmbeddings(taskId, taskData)
   } else {
-    await createTask({
+    const task = await createTask({
       task: taskData,
     })
+
+    await storeTaskAsEmbeddings(task.id, taskData)
   }
 }
 

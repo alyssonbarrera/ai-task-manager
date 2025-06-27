@@ -1,6 +1,7 @@
 import { redirect } from 'react-router'
 import { TaskForm } from '~/features/tasks/task-form'
 import { getTaskById, updateTask } from '~/queries'
+import { storeTaskAsEmbeddings } from '~/services/task.server'
 import type { Route } from './+types/task-edit'
 
 const prepareListData = (str: string) =>
@@ -34,6 +35,8 @@ export async function action({ request }: Route.ActionArgs) {
       id: taskId,
       data: taskData,
     })
+
+    await storeTaskAsEmbeddings(taskId, taskData)
 
     return { success: true }
   } catch (error) {
