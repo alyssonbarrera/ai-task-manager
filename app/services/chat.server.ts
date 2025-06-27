@@ -41,13 +41,13 @@ Saída JSON esperada:
     "Primeiro critério",
     "Segundo critério",
     "Terceiro critério",
-    "Quarto critério",
+    "Quarto critério"
   ],
   "suggestedTests": [
     "it('primeiro teste', () => { ... })",
     "it('segundo teste', () => { ... })",
     "it('terceiro teste', () => { ... })",
-    "it('quarto teste', () => { ... })",
+    "it('quarto teste', () => { ... })"
   ],
   "estimatedTime": "2 dias",
   "implementationSuggestion": "Use React Hook Form para validação, Prisma ORM para gerenciamento de usuários e configure rotas protegidas com React Router 7."
